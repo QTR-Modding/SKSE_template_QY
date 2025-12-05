@@ -50,7 +50,6 @@ get_target_property(COMMONLIB_SRC_DIR CommonLibSSE SOURCE_DIR)
 find_path(CLIB_UTIL_INCLUDE_DIRS "ClibUtil/utils.hpp")
 find_path(CLIB_UTILS_QTR_INCLUDE_DIRS "ClibUtilsQTR/utils.hpp")
 find_path(SKSE_MCP_INCLUDE_DIRS "SKSEMCP/utils.hpp")
-find_path(SkyPromptAPI_INCLUDE_DIRS "SkyPrompt/API.hpp")
 
 
 file(
@@ -81,7 +80,6 @@ target_include_directories(
 	${CLIB_UTIL_INCLUDE_DIRS}
 	${CLIB_UTILS_QTR_INCLUDE_DIRS}
     ${SKSE_MCP_INCLUDE_DIRS}
-    ${SkyPromptAPI_INCLUDE_DIRS}
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
@@ -90,6 +88,6 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE IS_HOST_PLUGIN)
 set(wildlander_output false)
 set(steam_owrt_output false)
 set(steam_mods_output true)
-set(lorerim_mods_output true)
+set(lorerim_mods_output false)
 set(lorerim3_mods_output true)
 automaticGameFolderOutput(wildlander_output, steam_owrt_output, steam_mods_output lorerim_mods_output lorerim3_mods_output)
