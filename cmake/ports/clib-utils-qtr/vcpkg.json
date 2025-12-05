@@ -3,5 +3,5 @@
   "version-string": "1.0.0",
   "homepage": "https://github.com/QTR-Modding/CLibUtilsQTR",
   "license": "MIT",
-  "dependencies": ["clib-util"]
+  "dependencies": [ "clib-util" ]
 }
