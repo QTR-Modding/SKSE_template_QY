@@ -9,14 +9,11 @@
 
 #### THINGS TO EDIT
 
-1. In LICENSE:
-- **`YEAR`**
-- **`YOURNAME`**
-2. CMakeLists.txt
+1. CMakeLists.txt
 - **`AUTHORNAME`**
 - **`MDDNAME`**
 - (optional) Your plugin version. Default: `0.1.0.0`
-3. vcpkg.json
+2. vcpkg.json
 - **`name`**: Your plugin's name.
 - **`version-string`**: Your plugin version. Default: `0.1.0.0`
 
