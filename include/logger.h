@@ -1,4 +1,5 @@
 #pragma once
+#include <spdlog/sinks/basic_file_sink.h>
 
 static void SetupLog() {
     auto logsFolder = SKSE::log::log_directory();
