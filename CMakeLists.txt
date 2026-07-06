@@ -72,6 +72,10 @@ add_commonlibsse_plugin(
 )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23) # <--- use C++23 standard
 target_precompile_headers(${PROJECT_NAME} PRIVATE include/PCH.h) # <--- PCH.h is required!
+
+find_path(DETOURS_INCLUDE_DIRS "detours/detours.h")
+find_library(DETOURS_LIBRARY detours REQUIRED)
+
 target_include_directories(
 	${PROJECT_NAME}
 	PRIVATE
@@ -80,6 +84,7 @@ target_include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+target_link_libraries(${PROJECT_NAME} PRIVATE ${DETOURS_LIBRARY})
 target_compile_definitions(${PROJECT_NAME} PRIVATE IS_HOST_PLUGIN)
 
 set(wildlander_output false)

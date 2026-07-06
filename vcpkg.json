@@ -14,7 +14,8 @@
     "directxtk",
     "boost-stl-interfaces",
     "clib-util",
-    "skse-mcp"
+    "skse-mcp",
+    "detours"
   ],
   "overrides": [
     {
