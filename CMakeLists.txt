@@ -50,6 +50,7 @@ get_target_property(COMMONLIB_SRC_DIR CommonLibSSE SOURCE_DIR)
 
 find_path(CLIB_UTIL_INCLUDE_DIRS "ClibUtil/utils.hpp")
 find_path(CLIB_UTILS_QTR_INCLUDE_DIRS "ClibUtilsQTR/utils.hpp")
+find_library(DETOURS_LIBRARY detours REQUIRED)
 find_path(SKSE_MCP_INCLUDE_DIRS "SKSEMCP/utils.hpp")
 
 
@@ -83,6 +84,8 @@ target_include_directories(
     ${SKSE_MCP_INCLUDE_DIRS}
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 )
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${DETOURS_LIBRARY})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE IS_HOST_PLUGIN)
 
