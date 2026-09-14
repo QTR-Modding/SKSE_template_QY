@@ -1,16 +1,36 @@
 #include "logger.h"
 
+namespace {
+    void TestPlayerPerk() {
+        auto* player = RE::PlayerCharacter::GetSingleton();
+        auto* perk = RE::TESForm::LookupByEditorID<RE::BGSPerk>("Alchemist00");
+        if (!player || !perk) {
+            logger::error("kDataLoaded perk test skipped: player={}, perk={}", player != nullptr, perk != nullptr);
+            return;
+        }
+
+        const bool before = player->HasPerk(perk);
+        logger::info("kDataLoaded: Alchemist00 ({:08X}), HasPerk before AddPerk={}", perk->GetFormID(), before);
+        if (before) {
+            logger::warn("Perk test skipped: player already has the test perk");
+            return;
+        }
+
+        player->AddPerk(perk);
+        const bool after = player->HasPerk(perk);
+        logger::info("kDataLoaded: HasPerk immediately after AddPerk={}", after);
+        player->RemovePerk(perk);
+        logger::info("kDataLoaded: HasPerk after cleanup={}", player->HasPerk(perk));
+    }
+}
+
 void OnMessage(SKSE::MessagingInterface::Message* message) {
     if (message->type == SKSE::MessagingInterface::kDataLoaded) {
-        // Start
-    }
-    if (message->type == SKSE::MessagingInterface::kNewGame || message->type == SKSE::MessagingInterface::kPostLoadGame) {
-        // Post-load
+        TestPlayerPerk();
     }
 }
 
 SKSEPluginLoad(const SKSE::LoadInterface *skse) {
-
     SetupLog();
     logger::info("Plugin loaded");
     SKSE::Init(skse);
