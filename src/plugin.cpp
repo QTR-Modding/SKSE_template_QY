@@ -3,7 +3,8 @@
 namespace {
     void TestPlayerPerk() {
         auto* player = RE::PlayerCharacter::GetSingleton();
-        auto* perk = RE::TESForm::LookupByEditorID<RE::BGSPerk>("Alchemist00");
+        constexpr RE::FormID alchemistPerkID = 0x000BE127; // Alchemist00 in Skyrim.esm
+        auto* perk = RE::TESForm::LookupByID<RE::BGSPerk>(alchemistPerkID);
         if (!player || !perk) {
             logger::error("kDataLoaded perk test skipped: player={}, perk={}", player != nullptr, perk != nullptr);
             return;
