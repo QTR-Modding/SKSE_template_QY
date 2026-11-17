@@ -45,6 +45,21 @@ set(ENABLE_SKYRIM_AE ON CACHE BOOL " " FORCE)
 set(ENABLE_SKYRIM_VR ON CACHE BOOL " " FORCE)
 set(BUILD_TESTS OFF CACHE BOOL " " FORCE)
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  set(path_roots "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}" "$ENV{COMMONLIB_SSE_FOLDER}")
+  if(VCPKG_INSTALLED_DIR)
+    list(APPEND path_roots "${VCPKG_INSTALLED_DIR}")
+  endif()
+  list(REMOVE_DUPLICATES path_roots)
+  foreach(path_root IN LISTS path_roots)
+    cmake_path(CONVERT "${path_root}" TO_CMAKE_PATH_LIST path_root)
+    cmake_path(ABSOLUTE_PATH path_root NORMALIZE OUTPUT_VARIABLE absolute_root)
+    cmake_path(NATIVE_PATH absolute_root native_root)
+    add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:/d1trimfile:${native_root}\\>")
+  endforeach()
+  add_compile_options("$<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:/Z7>")
+endif()
+
 add_subdirectory("$ENV{COMMONLIB_SSE_FOLDER}" ${CMAKE_CURRENT_BINARY_DIR}/_deps/clib-build)
 get_target_property(COMMONLIB_SRC_DIR CommonLibSSE SOURCE_DIR)
 
@@ -74,6 +89,21 @@ add_commonlibsse_plugin(
   AUTHOR AUTHOR_NAME
   SOURCES ${headers} ${sources}
 )
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  target_link_options(${PROJECT_NAME} PRIVATE
+    "/PDBALTPATH:%_PDB%"
+    "$<$<CONFIG:Release>:/DEBUG:FULL;/INCREMENTAL:NO;/OPT:REF;/OPT:ICF>"
+  )
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND powershell.exe -NoProfile -NonInteractive -ExecutionPolicy RemoteSigned
+      -File "${CMAKE_CURRENT_SOURCE_DIR}/cmake/lib/verifyDllPaths.ps1"
+      -Dll "$<TARGET_FILE:${PROJECT_NAME}>"
+      -Configuration "$<CONFIG>"
+    VERBATIM
+  )
+  set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY LINK_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/lib/verifyDllPaths.ps1")
+endif()
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23) # <--- use C++23 standard
 target_precompile_headers(${PROJECT_NAME} PRIVATE include/PCH.h) # <--- PCH.h is required!
 target_include_directories(
